@@ -48,23 +48,55 @@ module.exports = function(app, passport) {
 	
 	/*************************** SERVER SIDE ROUTES ************************/
 	
-	// GETS THE DATA CORRESPONDING TO A BILL OF A CERTAIN ID
-	app.post('/addBillId/:billId', function(req, res){
+	// ADDS BILL TO USER
+	app.post('/addBillId/:billId', isLoggedIn, function(req, res){
 		// get the bill id
 		var bill_id = req.params.billId;
+		
+		// get the user from the session
+		var user = req.user;
+		
+		//check for duplicates
+		for (var i = 0 ; i < user.user.data.trackedbills.length; i++){
+			if (user.user.data.trackedbills[i] == bill_id){
+				res.end("Duplicate Bill: " + bill_id);
+				return;
+			}
+		}
+		
+		// if no duplicates, save
+		user.user.data.trackedbills.push(bill_id);
+		
+		// save mondified user
+		user.save(function(){
+			console.log("SAVED BILL TO USER");
+		});
+		
+		res.end("Bill Successfully Saved: " + bill_id);
+
+	});
+	
+	// GETS THE BILL DATA OF BILLID PARAMETER
+	app.get('/getBillData/:billId', function(req, res){
+		// get bill id
+		var bill_id = req.params.billId;
+		Bill.findOne({'bill.main.id' : bill_id}, function(err, docs){
+			res.end(JSON.stringify(docs));
+		});
 	});
 	
 	// RETURN THE BILLS ATTACHED TO USER IN CURRENT SESSION
 	app.get('/userbills', isLoggedIn, function(req, res){
-		// return the user bills
+		// get the user bills
 		var bills = req.user.user.data.trackedbills;
-		res.send(JSON.stringify(bills));
+		res.end(JSON.stringify(bills));
+
 	});
 	
 	// RETURN THE MOST RECENTLY UPDATED BILLS IN A CERTAIN RANGE(DEPENDING ON PAGE)
 	app.get('/getrecentupdated/:page', function(req, res){
 		var page = req.params.page;
-		Bill.find().sort({"bill.data.latest_major_action_date" : -1}).limit(50).skip(20 * (page - 1)).exec(function(err, docs){
+		Bill.find().sort({"bill.data.latest_major_action_date" : 1}).limit(25).skip(20 * (page - 1)).exec(function(err, docs){
 			res.send(docs);
 		});
 	});
@@ -72,7 +104,7 @@ module.exports = function(app, passport) {
 	// RETURN THE MOST RECENTLY INTRODUCED BILLS IN A CERTAIN RANGE(DEPENDING ON PAGE)
 	app.get('/getrecentintroduced/:page', function(req, res){
 		var page = req.params.page;
-		Bill.find().sort({"introduced_date" : -1}).limit(30).skip(20 * (page - 1)).exec(function(err, docs){
+		Bill.find().sort({"bill.data.introduced_date" : 1}).limit(25).skip(20 * (page - 1)).exec(function(err, docs){
 			res.send(docs);
 		});
 	});

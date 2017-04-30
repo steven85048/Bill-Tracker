@@ -7,7 +7,6 @@ var Bill = require('../database/Bill.js');
 module.exports = function(child, io){
 	// PING ALL USERS UPON RECEPTION OF BILLID FROM CHILD PROCESS
 	child.on('message', function(billId) {
-		console.log("RECEIVED BILL: " + billId);
 		findUpdatedBill(billId, pingAllUsers);
 	});
 	

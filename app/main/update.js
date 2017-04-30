@@ -13,16 +13,12 @@ var urlSenateIntroduced = 'https://api.propublica.org/congress/v1/115/senate/bil
 var urlHouseUpdated = 'https://api.propublica.org/congress/v1/115/house/bills/updated.json';
 var urlSenateUpdated = 'https://api.propublica.org/congress/v1/115/senate/bills/updated.json';
 
+var updateInterval = 3600000;
+
 // MONGODB INITIALIZATION
 var mongoose = require('mongoose'); // for mongodb connection
 var config = require('../database/database.js');
 mongoose.connect(config.url);
-
-/**
-process.on('message', function(m) {
-	process.send(m.hello);
-});
-**/
 
 // CONTINUALLY UPDATE THE DATABASE EVERY 30 MINUTES
 // AND SEND MESSAGE TO PARENT PROCESS
@@ -89,6 +85,9 @@ var handleBillAdd = function(currbill){
 			var latest_major_action = new Date(latest_major_action);
 			
 			if(bill){
+				// first convert to object
+				var bill = bill.toJSON();
+				
 				// bill already exists in database; just update it				
 				bill.bill.data.enacted = enacted;
 				bill.bill.data.house_passage = house_passage;
@@ -104,8 +103,10 @@ var handleBillAdd = function(currbill){
 					bill.bill.data.latest_major_action_date = curr_actions;
 				}
 				
-				// SAVE THE UPDATED BILL TO THE DATABASE:
-				bill.save(function(err){
+				// prevent multiple ids
+				delete bill._id;
+				
+				Bill.findOneAndUpdate({'bill.main.id': bill.bill.main.id}, bill, function(err, doc){
 					if (err)
 						throw err;
 					console.log("FINISHED UPDATING BILL: " + bill.bill.main.id);
@@ -199,12 +200,12 @@ var strToDate = function(dateString){
 	return date;
 }
 
-//getBills(urlHouseIntroduced);
-//getBills(urlHouseUpdated);
-//getBills(urlSenateIntroduced);
-//getBills(urlSenateUpdated);
+setTimeout(function(){getBills(urlHouseIntroduced)}, 20000);
+setTimeout(function(){getBills(urlHouseUpdated)}, 20000);
+setTimeout(function(){getBills(urlSenateIntroduced)}, 20000);
+setTimeout(function(){getBills(urlSenateUpdated)}, 20000);
 
-//setInterval(getBills(urlHouseIntroduced), 1800000); // updates every 30 minutes
-//setInterval(getBills(urlHouseUpdated), 1800000); // updates every 30 minutes
-//setInterval(getBills(urlSenateIntroduced), 1800000); // updates every 30 minutes
-//setInterval(getBills(urlSenateUpdated), 1800000); // updates every 30 minutes
+setInterval(function(){ getBills(urlHouseIntroduced);}, updateInterval);
+setInterval(function(){ getBills(urlHouseUpdated);}, updateInterval); 
+setInterval(function(){ getBills(urlSenateIntroduced);}, updateInterval); 
+setInterval(function(){ getBills(urlSenateUpdated);}, updateInterval); 

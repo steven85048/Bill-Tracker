@@ -15,13 +15,6 @@ module.exports = function(io){
 			UserTrack.find({'track.socket' : socket.id}).remove().exec();
 		});
 		
-		/**
-		socket.emit('news', {hello: 'world'});
-		socket.on('other event', function(data){
-			console.log(data);
-		});
-		**/
-		
 		// ADD SOCKET TO DATABASE AND VERIFY CONNECTION
 		console.log("Query: ", socket.handshake.query);
 		addSocketToDatabase(socket.id, socket.handshake.query.data);
@@ -34,9 +27,7 @@ module.exports = function(io){
 		
 		// SAVE USER DATA
 		newTrack.track.socket = socketid;
-		var addArr = [];
-		for (var i = 0 ; i < billids.length; i++)
-			addArr.push(billids[i]);
+		newTrack.track.billIds = JSON.parse(billids) ;
 		
 		// SAVE INTO DATABASE
 		newTrack.save(function(err){

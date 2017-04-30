@@ -1,12 +1,50 @@
 <html>
 	<head>
+		
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" >
 		<% include ./partials/head.ejs %>
-		<% include ./partials/header.ejs %>
+		<link rel="stylesheet" type="text/css" href="./CSS/dashboard.css">
 		<script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
 		<script src="/socket.io/socket.io.js"></script>
 		<script src = '/JS/dashboard.js' /></script>
+		<% include ./partials/header.ejs %>
+
 	</head>
 	
-	<body>
+	<body>		
+		<div class = "main_wrapper">
+			<h3 id = "main_title_header"> Dashboard </h3>
+			<div id = "data_wrapper"></div>
+		</div>
+		
+		<div id="modal_container" class="modal">
+			<div id="modal-content">
+				<div id="modal-header">
+					<span class = "close"> &times </span>
+					<h4 id = "modal_title"> </h4>
+				</div>
+				<div id="modal-body"></div>
+			</div>
+		</div>
+
+		<script>
+		// Get the modal
+		var modal = document.getElementById('modal_container');
+
+		// Get the <span> element that closes the modal
+		var span = document.getElementsByClassName("close")[0];
+
+		// When the user clicks on <span> (x), close the modal
+		span.onclick = function() {
+			modal.style.display = "none";
+		}
+
+		// When the user clicks anywhere outside of the modal, close it
+		window.onclick = function(event) {
+			if (event.target == modal) {
+				modal.style.display = "none";
+			}
+		}
+		</script>
 	</body>
 </html>

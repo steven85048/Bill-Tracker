@@ -1,5 +1,6 @@
 <html>
 	<head>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
 		<% include ./partials/head.ejs %>
 		<script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
 		<link rel="stylesheet" type="text/css" href="./CSS/browse.css">
@@ -9,18 +10,59 @@
 		<% include ./partials/header.ejs %>
 	</head>
 	
-	<body>
-		<div class = "card well">
-			<div class = "card inner_card">
+	<body>		
+		<ul class="page_num pagination pagination-md">
+			<li class = "pagination_element"><a style = "display: none;" href="#0">1</a></li>
+			<li class = "pagination_element"><a href="#1">1</a></li>
+			<li class = "pagination_element"><a href="#2">2</a></li>
+			<li class = "pagination_element"><a href="#3">3</a></li>
+			<li class = "pagination_element"><a href="#4">4</a></li>
+			<li class = "pagination_element"><a href="#5">5</a></li>
+		</ul>
+		
+		<div class="selection_type btn-group-vertical">
+			<button type="button" id = "button_introduced" class="btn btn-m" style= "margin-top: 5px"><div class = "glyphicon glyphicon-download"></div></button>
+			<button type="button" id = "button_updated" class="btn btn-m" style = "margin-top: 5px"><div class = "glyphicon glyphicon-upload"></div></button>
+		</div>
+	
+		<div class = "main_wrapper card">
+			<div class = "card well inner_card">
+				<h3 id = "main_title_header" style = "margin-bottom: 30px; margin-left: 10px;"> Recently Updated Bills </h3>
 				<table id = "bill_table">
 				</table>
 			</div>
 		</div>
 		
-		<div id = "modal_main">
-			<div class = "modal_content">
-				
+		<div id="modal_container" class="modal">
+			<div id="modal-content">
+				<div id="modal-header">
+					<span class = "close"> &times </span>
+					<h4 id = "modal_title"> </h4>
+				</div>
+				<div id="modal-body"></div>
 			</div>
 		</div>
+		
+		<div id="snackbar"></div>
+		
+		<script>
+		// Get the modal
+		var modal = document.getElementById('modal_container');
+
+		// Get the <span> element that closes the modal
+		var span = document.getElementsByClassName("close")[0];
+
+		// When the user clicks on <span> (x), close the modal
+		span.onclick = function() {
+			modal.style.display = "none";
+		}
+
+		// When the user clicks anywhere outside of the modal, close it
+		window.onclick = function(event) {
+			if (event.target == modal) {
+				modal.style.display = "none";
+			}
+		}
+		</script>
 	</body>
 </html>
