@@ -3,5 +3,5 @@
 // -------------------------------------------------------------------------------//
 
 module.exports = {
-	'apikey' : '4jVRBAKrhn4nniRoSo5Gf4AWuM8DaA9G3GUC9pqN'
+	'apikey' : 'API_KEY'
 }
