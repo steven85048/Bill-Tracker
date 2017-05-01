@@ -28,7 +28,7 @@ var io = socket.listen(http);
 // PASSPORT INITIALIZATION
 var auth = require('./app/passport/auth.js');
 require('./app/passport/passport.js')(passport, auth);
-app.use(session({secret: 'password'})); 
+app.use(session({secret: 'App_Secret'})); 
 app.use(passport.initialize());
 app.use(passport.session());
 
