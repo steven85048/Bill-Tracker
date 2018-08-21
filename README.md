@@ -13,5 +13,6 @@ TO RUN:
 (d) node index.js - to start server on local machine
 (e) localhost:8080/browse - to route to first page
 
+** No longer updates since some edge case in the API broke it, but the front-end still functions with old data, and log-in still works.
 
 == A globally accessible version can be accessed at: https://blooming-sierra-11165.herokuapp.com/ ==
